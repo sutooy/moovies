@@ -22,5 +22,6 @@ export const getNowPlayingMovie = async (page) => {
 }
 
 export const getSearchMovie = async (page, title,) => {
-    await api.get(`/search/movie?query=${title ? title : ""}&include_adult=false&language=en-US&page=${page ? page : 1}`)
+    const data = await api.get(`/search/movie?query=${title ? title : ""}&include_adult=false&language=en-US&page=${page ? page : 1}`)
+    return data
 }

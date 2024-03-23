@@ -1,11 +1,11 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function Main() {
     const navigate = useNavigate();
 
     return (
-        <div onClick={() => { navigate("/detail") }}>main page</div>
+        <div className='text-xl font-extrabold' onClick={() => { navigate("/detail") }}>main page</div>
     )
 }
 
