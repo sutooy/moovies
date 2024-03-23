@@ -1,9 +1,9 @@
 import React from 'react'
 
-function index() {
+function Detail() {
     return (
-        <div>index</div>
+        <div>detail page</div>
     )
 }
 
-export default index
+export default Detail

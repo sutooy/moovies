@@ -1,9 +1,12 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-function index() {
+function Main() {
+    const navigate = useNavigate();
+
     return (
-        <div>index</div>
+        <div onClick={() => { navigate("/detail") }}>main page</div>
     )
 }
 
-export default index
+export default Main
