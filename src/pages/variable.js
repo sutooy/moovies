@@ -49,8 +49,8 @@ export const genres = [
 export const popularList = [
     "Popularity Ascending",
     "Popularity Descending",
-    "Release Date Ascending",
-    "Release Date Descending",
+    "Release-Date Ascending",
+    "Release-Date Descending",
     "Rating Ascending",
     "Rating Descending"
 ]
