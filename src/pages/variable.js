@@ -45,3 +45,14 @@ export const genres = [
         "name": "Horror"
     },
 ]
+
+export const popularList = [
+    "Popularity Ascending",
+    "Popularity Descending",
+    "Release Date Ascending",
+    "Release Date Descending",
+    "Rating Ascending",
+    "Rating Descending"
+]
+
+export const lineBorder = () => { return <div style={{ borderColor: 'rgba(255, 255, 255, 0.07)' }} className=' border border-b' /> }
