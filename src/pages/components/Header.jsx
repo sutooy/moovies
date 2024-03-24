@@ -38,7 +38,6 @@ function Header() {
         }
     }, [dataCurrent.search]);
 
-
     const boldString = (text, word) => {
         if (!text || !word) return text; // Handle empty cases
         const wordRegex = new RegExp(`\\b${word}\\b`, 'gi'); // Case-insensitive whole word match
@@ -49,7 +48,7 @@ function Header() {
     const toggleGenre = () => setGenre(!genre)
 
     return (
-        <div className='nav-container bg-white-trans w-full z-40'>
+        <div className='nav-container bg-white-trans w-full z-40 absolute top-0'>
             <div className='flex flex-wrap h-full justify-center items-center '>
                 <img width={112} height={31} alt='logo' src={'/asset/moovietime-logo@2x.png'} />
                 <form className='relative flex px-3 gap-2 rounded mx-9'>
