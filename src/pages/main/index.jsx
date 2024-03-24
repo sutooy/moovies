@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { genres, lineBorder, popularList } from '../variable'
-import { getDiscoverMovie } from '../../api'
+import { getDiscoverMovie, getTrendingMovie } from '../../api'
 import DisplayCard from './components/displayCard'
 import dayjs from 'dayjs'
+import Button from '../components/Button'
+import HeroSlider from './components/heroSlider'
 
 function Main() {
     const navigate = useNavigate();
@@ -15,6 +17,7 @@ function Main() {
     const [movieData, setMovieData] = useState([])
     const [movieEdited, setMovieEdited] = useState([])
     const [movieFilter, setMoiveFilter] = useState([])
+    const [movieTrending, setMovieTrending] = useState([])
     const [dataCurrent, setCurrentData] = useState({
         page: 1,
         search: ""
@@ -39,13 +42,21 @@ function Main() {
         try {
             const data = await getDiscoverMovie(page)
             page > dataCurrent.page ?
-                setMovieData(prev => [...prev, data?.data?.results]) :
+                setMovieData(prev => [...prev, ...data?.data?.results]) :
                 setMovieData(data?.data?.results);
             setCurrentData(prev => ({ ...prev, page: data?.data?.page }))
         }
         catch (error) { alert(error) }
     }
 
+    const getMovieTrend = async (page) => {
+        try {
+            const data = await getTrendingMovie(page)
+            setMovieTrending(data?.data?.results?.slice(0, 5));
+
+        }
+        catch (error) { alert(error) }
+    }
     const toggleSort = (x) => {
         setSort(prev => ({ ...prev, active: !sort.active, type: x }))
     }
@@ -71,19 +82,22 @@ function Main() {
 
     useEffect(() => {
         getMovie()
+        getMovieTrend()
     }, [])
 
     useEffect(() => {
         filterMovie()
     }, [movieFilter])
+
     const movieDetail = (id) => {
         navigate(`detail/${id}`)
     }
-    // console.log(movieData)
-    // console.log(movieFilter, movieEdited)
+
     return (
-        <div className='relative '>
-            <div className=''>Slider</div>
+        <div className='relative min-h-dvh mb-20'>
+            <div className=''>
+                <HeroSlider data={movieTrending} />
+            </div>
 
             <div className='flex px-32 gap-8'>
                 <div
@@ -154,13 +168,27 @@ function Main() {
                     {movieData.length > 0 &&
                         (movieEdited.length >= 1 ? movieEdited : movieData)?.map(el =>
                             <div className='' key={el?.title}>
-                                <DisplayCard data={el}
+                                <DisplayCard
+                                    data={el}
                                     onClick={() => movieDetail(el?.id)}
                                 />
+                                <div className='text-white text-ellipsis overflow-hidden mt-5'>
+                                    <p className='text-sm font-semibold '>{el?.title}</p>
+                                    <p
+                                        className='text-gray text-xs'> {dayjs(el.release_date).format("YYYY")}</p>
+                                </div>
                             </div>
                         )}
+                    <Button
+                        onClick={() => getMovie(dataCurrent.page + 1)
+                        }
+                        className='col-span-4 mt-10 mx-auto bg-red text-white font-semibold '>
+                        Load More
+                    </Button>
                 </div>
+
             </div>
+
         </div>
     )
 }
