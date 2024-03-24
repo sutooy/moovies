@@ -15,16 +15,11 @@ api.interceptors.request.use((req) => {
 
 export const getTrendingMovie = async (page) => {
     await api.get(`trending/movie/week?language=en-US&page=${page ? page : 1}`)
-
 }
 
 export const getDiscoverMovie = async (page) => await api.get(`discover/movie?include_adult=false&include_video=false&language=en-US&page=${page ? page : 1}&sort_by=popularity.desc`)
 
 export const getDetailMovie = async (id) => await api.get(`movie/${id}?language=en-US`)
 
-// 
-// ?language=en-US&page=1
-export const getSearchMovie = async (page, title,) => {
-    const data = await api.get(`/search/movie?query=${title ? title : ""}&include_adult=false&language=en-US&page=${page ? page : 1}`)
-    return data
-}
+export const getSearchMovie = async (page, title,) => await api.get(`/search/movie?query=${title ? title : ""}&include_adult=false&language=en-US&page=${page ? page : 1}`)
+
