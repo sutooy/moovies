@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { genres, lineBorder, popularList } from '../variable'
 import { getDiscoverMovie } from '../../api'
 import DisplayCard from './components/displayCard'
+import dayjs from 'dayjs'
 
 function Main() {
     const navigate = useNavigate();
@@ -12,10 +13,27 @@ function Main() {
         id: ""
     })
     const [movieData, setMovieData] = useState([])
+    const [movieEdited, setMovieEdited] = useState([])
+    const [movieFilter, setMoiveFilter] = useState([])
     const [dataCurrent, setCurrentData] = useState({
         page: 1,
         search: ""
     })
+
+    // to set the filter parameter
+    const toggleFilter = (id) => {
+        movieFilter.find(el => el === id) ?
+            setMoiveFilter(movieFilter.filter(el => el !== id)) :
+            setMoiveFilter(prev => ([...prev, id]))
+    }
+    // filter moive function
+    const filterMovie = () => {
+        if (movieFilter.length < 1) { return setMovieEdited([]) }
+        const filtered = movieData.filter((movie) => {
+            return movieFilter.some((genre) => movie.genre_ids.includes(genre));
+        });
+        setMovieEdited(filtered)
+    }
 
     const getMovie = async (page) => {
         try {
@@ -28,19 +46,41 @@ function Main() {
         catch (error) { alert(error) }
     }
 
-    const toggleSort = () => {
-        setSort(prev => ({ ...prev, active: !sort.active }))
+    const toggleSort = (x) => {
+        setSort(prev => ({ ...prev, active: !sort.active, type: x }))
+    }
+
+    const sortMovie = (type, option) => {
+        type === "Popularity" ? type = "popularity" : type === "Release-Date" ? type = "release_date" : type = "vote_average"
+
+        const sorted = (movieEdited.length > 0 ? movieEdited : movieData).slice().sort((a, b) => {
+            const dateA = +dayjs(a.release_date);
+            const dateB = +dayjs(b.release_date);
+            if (type === "release_date" && option === "Ascending") {
+                return dateA - dateB
+            } else if (type === "release_date" && option === "Descending") {
+                return dateB - dateA
+            } else if (option === "Ascending") {
+                return a[type] - b[type]
+            } else if (option === "Descending") {
+                return b[type] - a[type]
+            }
+        })
+        return setMovieEdited(sorted)
     }
 
     useEffect(() => {
         getMovie()
     }, [])
 
+    useEffect(() => {
+        filterMovie()
+    }, [movieFilter])
     const movieDetail = (id) => {
         navigate(`detail/${id}`)
     }
-
-    console.log(movieData)
+    // console.log(movieData)
+    // console.log(movieFilter, movieEdited)
     return (
         <div className='relative '>
             <div className=''>Slider</div>
@@ -56,11 +96,11 @@ function Main() {
                     {lineBorder()}
                     <div className='relative rounded pb-7 pt-5 px-4' >
                         <p
-                            onClick={toggleSort}
+                            onClick={() => toggleSort()}
                             className='rounded px-4 py-2.5 flex justify-between items-center cursor-pointer max-w-52 w-full '
                             style={{ backgroundColor: 'rgba(47, 54, 63, 1)' }}
                         >
-                            {sort.type !== "" ? sort : "Popularity"}
+                            {sort.type !== "" ? sort?.type : "Popularity"}
                             <img
                                 className={`${sort.active ? "rotate-180" : ""} `}
                                 height={10}
@@ -76,6 +116,12 @@ function Main() {
                             >
                                 {popularList.map(el =>
                                     <div
+                                        onClick={() => {
+                                            let param1 = el.split(" ")[0]
+                                            let param2 = el.split(" ")[1]
+                                            sortMovie(param1, param2)
+                                            toggleSort(el)
+                                        }}
                                         className='text-xs pb-2 cursor-pointer hover:text-red-brown '
                                         key={el}
                                     >
@@ -94,7 +140,10 @@ function Main() {
                             <div className='items-center justify-between flex pb-2' key={el.name}>
                                 {el.name}
                                 <div style={{ borderColor: "rgba(255, 255, 255, 0.5)" }} className='flex border-2 rounded'>
-                                    <input type="checkbox" className="accent-red-brown w-3 h-3 cursor-pointer rounded appearance-none checked:appearance-auto checked:rounded " />
+                                    <input
+                                        onClick={() => toggleFilter(el.id)}
+                                        type="checkbox"
+                                        className="accent-red-brown w-3 h-3 cursor-pointer rounded appearance-none checked:appearance-auto checked:rounded " />
                                 </div>
 
                             </div>
@@ -103,7 +152,7 @@ function Main() {
                 </div>
                 <div className='grid 2xl:flex 2xl:flex-wrap xl:grid-cols-4 lg:grid-cols-2 gap-5'>
                     {movieData.length > 0 &&
-                        movieData?.map(el =>
+                        (movieEdited.length >= 1 ? movieEdited : movieData)?.map(el =>
                             <div className='' key={el?.title}>
                                 <DisplayCard data={el}
                                     onClick={() => movieDetail(el?.id)}
