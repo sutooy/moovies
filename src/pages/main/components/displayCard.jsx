@@ -24,7 +24,8 @@ function DisplayCard({ data, onClick }) {
                     style={{ backgroundImage: `url(${image_url + data?.poster_path})` }}
                 >
                 </div>
-                <div style={{ backgroundColor: `rgba(0,0,0,${hover ? 0.8 : 0})` }} className="duration-300 absolute inset-0 z-10 flex flex-col justify-center items-center ">
+                <div style={{ backgroundColor: `rgba(0,0,0,${hover ? 0.8 : 0})` }}
+                    className={` duration-300 absolute inset-0 z-10 ${hover ? "flex" : "hidden "} flex-col justify-center items-center`}>
                     <div className='  py-auto'>
                         <div className='flex items-center gap-2.5'>
                             <img height={32} width={32} src={'/asset/Star.png'} alt='star' />
