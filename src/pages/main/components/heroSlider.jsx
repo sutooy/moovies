@@ -13,7 +13,6 @@ function HeroSlider({ data }) {
         className: "center",
         centerMode: true,
         infinite: true,
-        // centerPadding: "10px",
         slidesToShow: 2,
         speed: 1000,
         autoplay: true,

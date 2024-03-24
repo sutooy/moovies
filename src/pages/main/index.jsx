@@ -18,10 +18,16 @@ function Main() {
     const [movieEdited, setMovieEdited] = useState([])
     const [movieFilter, setMoiveFilter] = useState([])
     const [movieTrending, setMovieTrending] = useState([])
+    const [addMovie, setAddedMovie] = useState([])
     const [dataCurrent, setCurrentData] = useState({
         page: 1,
         search: ""
     })
+    const toggleAdd = (id) => {
+        addMovie.find(el => el === id) ?
+            setAddedMovie(addMovie.filter(el => el !== id)) :
+            setAddedMovie(prev => ([...prev, id]))
+    }
 
     // to set the filter parameter
     const toggleFilter = (id) => {
@@ -29,6 +35,7 @@ function Main() {
             setMoiveFilter(movieFilter.filter(el => el !== id)) :
             setMoiveFilter(prev => ([...prev, id]))
     }
+
     // filter moive function
     const filterMovie = () => {
         if (movieFilter.length < 1) { return setMovieEdited([]) }
@@ -99,7 +106,21 @@ function Main() {
                 <HeroSlider data={movieTrending} />
             </div>
 
-            <div className='flex px-32 gap-8'>
+            <div style={{ height: '300px' }} className='bg-white-trans flex justify-between items-center px-32'>
+                <div>
+                    <div className='bg-red w-28 h-1 mb-2'></div>
+                    <p className='text-white text-2xl font-semibold'>Discover Movies</p>
+                </div>
+                <div className='flex items-center gap-3'>
+                    <p className='text-white font-semibold'>My Movies</p>
+                    <p style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }} className=' text-white rounded-full py-2 px-4 '
+                    >
+                        <span className='font-bold'>{addMovie?.length}</span> &nbsp; Movies
+                    </p>
+                </div>
+            </div>
+
+            <div className='flex px-32 gap-8 -mt-20'>
                 <div
                     style={{ background: "linear-gradient(180deg, #0E1723 0%, rgba(30, 35, 42, 0) 100%)" }}
                     className='max-w-60 w-full text-white rounded-lg'>
@@ -164,13 +185,15 @@ function Main() {
                         )}
                     </div>
                 </div>
-                <div className='grid 2xl:flex 2xl:flex-wrap xl:grid-cols-4 lg:grid-cols-2 gap-5'>
+                <div className='grid  xl:grid-cols-4 lg:grid-cols-2 gap-5'>
                     {movieData.length > 0 &&
                         (movieEdited.length >= 1 ? movieEdited : movieData)?.map(el =>
                             <div className='' key={el?.title}>
                                 <DisplayCard
                                     data={el}
                                     onClick={() => movieDetail(el?.id)}
+                                    onClick2={() => toggleAdd(el?.id)}
+                                    added={addMovie.find(item => item === el.id)}
                                 />
                                 <div className='text-white text-ellipsis overflow-hidden mt-5'>
                                     <p className='text-sm font-semibold '>{el?.title}</p>
@@ -182,7 +205,7 @@ function Main() {
                     <Button
                         onClick={() => getMovie(dataCurrent.page + 1)
                         }
-                        className='col-span-4 mt-10 mx-auto bg-red text-white font-semibold '>
+                        className='xl:col-span-4 lg:col-span-2 mt-10 mx-auto bg-red text-white font-semibold '>
                         Load More
                     </Button>
                 </div>

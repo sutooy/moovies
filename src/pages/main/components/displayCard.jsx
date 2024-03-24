@@ -4,7 +4,7 @@ import Button from '../../components/Button'
 import { genres } from '../../variable'
 import { roundNumber } from '../../../utils/math'
 
-function DisplayCard({ data, onClick }) {
+function DisplayCard({ data, onClick, onClick2, added }) {
     const [hover, setHover] = useState(false)
     const checkGenre = (data) => {
         let genre = []
@@ -50,8 +50,10 @@ function DisplayCard({ data, onClick }) {
                         >
                             View
                         </Button>
-                        <Button className={`mt-3 text-white border opacity-100 text-sm font-semibold`}>
-                            Add
+                        <Button
+                            onClick={onClick2}
+                            className={`${added ? "bg-green-light text-green-dark" : ""}  mt-3 text-white border opacity-100 text-sm font-semibold`}>
+                            {added ? "Added" : "add"}
                         </Button>
                     </div>
                 </div>
