@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { genres } from '../variable'
 import { getMovieGenre, getSearchMovie } from '../../api'
 import { useNavigate } from 'react-router-dom'
 

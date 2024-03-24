@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { } from 'react'
 import Slider from "react-slick";
 import { image_url } from '../../../api';
 import { roundNumber } from '../../../utils/math';
